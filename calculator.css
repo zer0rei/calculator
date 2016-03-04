@@ -34,16 +34,23 @@ body {
 
 #expression {
 	position: absolute;
-	top: 1em;
 	right: 0;
 	margin: 0.5em 0;
-	height: 3.5em;
 	font-size: 1em;
 	color: grey;
 }
 
-#expression p {
-	margin: 0 0.5em;
+#expression textarea {
+	width: 100%;
+	height: 4.5em;
+	resize: none;
+	padding: 0 0.5em;
+	background-color: #1A1A1A;
+	border: none;
+}
+
+#expression textarea:focus {
+	outline: none;
 }
 
 #calculator button {

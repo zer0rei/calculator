@@ -15,7 +15,9 @@ $(document).ready(function() {
 	var ans = "";
 	// printers
 	function printExp() {
-		$("#expression p").html(process.join(""));
+		var textarea = $("#expression textarea");
+		textarea.val(process.join(""));
+		textarea.scrollTop(textarea[0].scrollHeight);
 	}
 	function printAns(answer) {
 		$("#answer p").html(answer);
@@ -64,7 +66,7 @@ $(document).ready(function() {
 	$("#ansSaver").click(function() {
 		if (ans && ans !== NaN) {
 			process.push(" " + ans + " ");
-			$("#expression p").html(process.join(""));
+			printExp();
 			isNumber = true;
 		}
 	});
