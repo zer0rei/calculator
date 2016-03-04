@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width-device=width, initial-scale=1">
+		<title>Calculator</title>
+		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="calculator.css">
+		<script src="includes/jquery.min.js"></script>
+		<script src="includes/bootstrap/js/boostrap.min.js"></script>
+		<script src="calculator.js"></script>
+	</head>
+	<body>
+		<div id="calculator">
+			<div id="screen" class="col-xs-12">
+				<div id="expression"><p><!-- Expression goes here --></p></div>
+				<div id="answer"><p><!-- Evaluation goes here --></p></div>
+			</div>
+			<button id="clear" class="operator col-xs-3">AC</button>
+			<button id="erase" class="operator col-xs-3"><img src="includes/images/erase.svg" alt="erase"></button>
+			<button id="divide" class="operator col-xs-3">/</button>
+			<button id="multiply" class="operator col-xs-3">x</button>
+			<button class="number col-xs-3">7</button>
+			<button class="number col-xs-3">8</button>
+			<button class="number col-xs-3">9</button>
+			<button id="substract" class="operator col-xs-3">-</button>
+			<button class="number col-xs-3">4</button>
+			<button class="number col-xs-3">5</button>
+			<button class="number col-xs-3">6</button>
+			<button id="add" class="operator col-xs-3">+</button>
+			<div class="col-xs-9 bottom-group">
+				<button class="number col-xs-4">1</button>
+				<button class="number col-xs-4">2</button>
+				<button class="number col-xs-4">3</button>
+				<button class="number col-xs-8">0</button>
+				<button class="number col-xs-4">.</button>
+			</div>
+			<button id="equal" class="col-xs-3">=</button>
+			<div id="credit" class="text-center">by <a href="https://www.github.com/zer0rei" target="_blank">HE</a></div>
+		</div>
+	</body>
+</html>

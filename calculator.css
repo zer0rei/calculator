@@ -1,0 +1,87 @@
+body {
+	background-color: #F2F2F2;
+}
+
+#calculator {
+	position: absolute;
+	width: 20em;
+	height: 28em;
+	background-color: #1A1A1A;
+}
+
+#screen {
+	height: 10em;
+}
+
+#screen div {
+	width: 100%;
+}
+
+#answer {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	margin: 0.5em 0;
+	height: 1.5em;
+	font-size: 2.5em;
+	color: white;
+}
+
+#answer p {
+	margin: 0 0.2em;
+	float: right;
+}
+
+#expression {
+	position: absolute;
+	top: 3em;
+	right: 0;
+	margin: 0.5em 0;
+	height: 1.5em;
+	font-size: 1em;
+	color: grey;
+}
+
+#expression p {
+	margin: 0 0.5em;
+}
+
+#calculator button {
+	border: 0.5px solid #1A1A1A;
+	border-radius: 0;
+}
+
+#calculator button:active {
+	opacity: 0.5;
+}
+
+.operator, .number {
+	color: grey;
+	height: 3.6em;
+}
+
+.operator {
+	background-color: #252525;
+}
+
+.number {
+	background-color: #303030;
+}
+
+#equal {
+	height: 7.2em;
+	background-color: #AC92EC;
+	color: #121212;
+}
+
+.bottom-group {
+	padding: 0;
+}
+
+#erase img {
+	height: 1.2em;
+}
+
+#credit a {
+	color: #60449D;
+}
