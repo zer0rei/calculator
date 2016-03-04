@@ -62,9 +62,7 @@ $(document).ready(function() {
 		ans = eval(process.join("").replace(/x/g, "*"));
 		var ansLength = ans.toString().length;
 		if (ansLength > 12)
-			ans = ans.toExponential(8);
-		else if (ansLength > 14)
-			ans = ans.toExponential(6);
+			ans = ans.toExponential(7);
 		process = [];
 		printAns(ans);
 		printExp();
