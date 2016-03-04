@@ -62,6 +62,10 @@ body {
 	opacity: 0.5;
 }
 
+#calculator button:focus {
+  outline: none;
+}
+
 .operator, .eraser, .number, #ansSaver {
 	color: grey;
 	height: 3.6em;
