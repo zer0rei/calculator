@@ -63,7 +63,7 @@ body {
 }
 
 #calculator button:focus {
-  outline: none;
+	outline: none;
 }
 
 .operator, .eraser, .number, #ansSaver {
