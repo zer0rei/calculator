@@ -1,4 +1,8 @@
 $(document).ready(function() {
+	// Remove the 300ms delay in mobile
+	$(function() {
+	    FastClick.attach(document.body);
+	});
 	// Layout
 	var calcTop = ($(window).height() - $("#calculator").height()) / 2;
 	var calcLeft = ($(window).width() - $("#calculator").width()) / 2;
