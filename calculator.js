@@ -60,8 +60,11 @@ $(document).ready(function() {
 
 	$("#equal").click(function() {
 		ans = eval(process.join("").replace(/x/g, "*"));
-		if (ans.toString().length > 12)
+		var ansLength = ans.toString().length;
+		if (ansLength > 12)
 			ans = ans.toExponential(8);
+		else if (ansLength > 14)
+			ans = ans.toExponential(6);
 		process = [];
 		printAns(ans);
 		printExp();
