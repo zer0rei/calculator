@@ -8,6 +8,8 @@ $(document).ready(function() {
 	var calcLeft = ($(window).width() - $("#calculator").width()) / 2;
 	if (calcTop > 0) {
 		$("#calculator").css("top", calcTop);
+	} else {
+		$("#calculator").css("top", "2em");
 	}
 	if (calcLeft > 0) {
 		$("#calculator").css("left", calcLeft);
