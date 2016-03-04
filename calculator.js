@@ -10,4 +10,62 @@ $(document).ready(function() {
 	}
 
 	// Logic
+	var process = [];
+	var isNumber = false;
+	var ans = "";
+	// printers
+	function printExp() {
+		$("#expression p").html(process.join(""));
+	}
+	function printAns(answer) {
+		$("#answer p").html(answer);
+	}
+
+	// When clicked
+	$(".number").click(function() {
+		process.push($(this).html());
+		printExp();
+		printAns("");
+		isNumber = true;
+	});
+
+	$(".operator").click(function() {
+		if (!isNumber && process.length !== 0)
+			process.pop();
+		if (process.length !== 0 || $(this).html() == '-') {
+			process.push(" " + $(this).html() + " ");
+			printExp();
+			$("#answer p").html("");
+			isNumber = false;
+		}
+	});
+
+	$("#erase").click(function() {
+		process.pop();
+		printExp();
+		printAns("");
+	});
+
+	$("#clear").click(function() {
+		process = [];
+		printExp();
+		printAns("");
+	});
+
+	$("#equal").click(function() {
+		ans = eval(process.join("").replace(/x/g, "*"));
+		if (ans.toString().length > 12)
+			ans = ans.toExponential(8);
+		process = [];
+		printAns(ans);
+		printExp();
+	});
+
+	$("#ansSaver").click(function() {
+		if (ans && ans !== NaN) {
+			process.push(" " + ans + " ");
+			$("#expression p").html(process.join(""));
+			isNumber = true;
+		}
+	});
 });

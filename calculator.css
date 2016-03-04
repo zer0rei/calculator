@@ -34,10 +34,10 @@ body {
 
 #expression {
 	position: absolute;
-	top: 3em;
+	top: 1em;
 	right: 0;
 	margin: 0.5em 0;
-	height: 1.5em;
+	height: 3.5em;
 	font-size: 1em;
 	color: grey;
 }
@@ -55,16 +55,16 @@ body {
 	opacity: 0.5;
 }
 
-.operator, .number {
+.operator, .eraser, .number, #ansSaver {
 	color: grey;
 	height: 3.6em;
 }
 
-.operator {
+.operator, .eraser {
 	background-color: #252525;
 }
 
-.number {
+.number, #ansSaver{
 	background-color: #303030;
 }
 
