@@ -74,6 +74,7 @@ $(document).ready(function() {
 		if (ans && ans !== NaN) {
 			process.push(" " + ans + " ");
 			printExp();
+			$("#answer p").html("");
 			isNumber = true;
 		}
 	});
