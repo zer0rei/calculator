@@ -6,10 +6,10 @@ $(document).ready(function() {
 	// Layout
 	var calcTop = ($(window).height() - $("#calculator").height()) / 2;
 	var calcLeft = ($(window).width() - $("#calculator").width()) / 2;
-	if (calcTop > 0) {
+	if (calcTop >= 0) {
 		$("#calculator").css("top", calcTop);
 	} else {
-		$("#calculator").css("top", "2em");
+		$("#calculator").css("top", "5%");
 	}
 	if (calcLeft > 0) {
 		$("#calculator").css("left", calcLeft);
