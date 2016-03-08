@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	// Remove the 300ms delay in mobile
 	$(function() {
-	    FastClick.attach(document.body);
+		FastClick.attach(document.body);
 	});
 	// Layout
 	var calcTop = ($(window).height() - $("#calculator").height()) / 2;
@@ -50,6 +50,7 @@ $(document).ready(function() {
 
 	$("#erase").click(function() {
 		process.pop();
+		isNumber = Number.isInteger(parseInt(process[process.length - 1]));
 		printExp();
 		printAns("");
 	});
