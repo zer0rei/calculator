@@ -1,3 +1,7 @@
+// // // // // // // // //
+//  CALCULATOR (by HE)  //
+// // // // // // // // //
+
 $(document).ready(function() {
 	// Remove the 300ms delay in mobile
 	$(function() {
