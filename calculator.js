@@ -58,7 +58,7 @@ $(document).ready(function() {
 
 	$("#erase").click(function() {
 		process.pop();
-		isNumber = Number.isInteger(parseInt(process[process.length - 1]));
+		isNumber = (typeof parseInt(process[process.length - 1]) === "number");
 		printExp();
 		printAns("");
 	});
@@ -80,7 +80,7 @@ $(document).ready(function() {
 	});
 
 	$("#ansSaver").click(function() {
-		if (ans && ans !== NaN) {
+		if (ans && !isNaN(ans)) {
 			process.push(" " + ans + " ");
 			printExp();
 			$("#answer p").html("");
