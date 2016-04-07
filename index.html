@@ -15,13 +15,15 @@
 		<script src="calculator.js"></script>
 	</head>
 	<body>
-		<div id="calculator" ontouchstart="">
+		<div id="calculator">
 			<div id="screen" class="col-xs-12">
 				<div id="expression"><textarea readonly></textarea></div>
 				<div id="answer"><p><!-- Evaluation goes here --></p></div>
 			</div>
 			<button id="clear" class="eraser col-xs-3">AC</button>
-			<button id="erase" class="eraser col-xs-3"><img src="includes/images/erase.svg" alt="erase"></button>
+			<button id="erase" class="eraser col-xs-3">
+				<img src="includes/images/erase.svg" alt="erase">
+			</button>
 			<button id="divide" class="operator col-xs-3">/</button>
 			<button id="multiply" class="operator col-xs-3">x</button>
 			<button class="number col-xs-3">7</button>
@@ -41,7 +43,9 @@
 				<button id="ansSaver" class="col-xs-4">Ans</button>
 			</div>
 			<button id="equal" class="col-xs-3">=</button>
-			<div id="credit" class="text-center">by <a href="https://www.github.com/zer0rei" target="_blank">HE</a></div>
+			<div id="credit" class="text-center">
+				by <a href="https://www.github.com/zer0rei" target="_blank">HE</a>
+			</div>
 		</div>
 	</body>
 </html>

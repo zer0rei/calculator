@@ -7,6 +7,7 @@ $(document).ready(function() {
 	$(function() {
 		FastClick.attach(document.body);
 	});
+
 	// Layout
 	$(window).resize(function() {
 		var calcTop = ($(window).height() - $("#calculator").height()) / 2;
