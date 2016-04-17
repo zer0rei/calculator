@@ -124,12 +124,22 @@ $(document).ready(function() {
 		var charPressed = String.fromCharCode(e.which);
 		if (validate(e.which, "number"))
 			numberPressed(charPressed);
-		else if (validate(e.which, "operator"))
+		else if (validate(e.which, "operator")) {
+			if (charPressed === "*")
+				charPressed = "x";
 			operatorPressed(charPressed);
-		else if (charPressed === "=")
+			e.preventDefault();
+		}
+		else if (charPressed === "=" || e.which === 13)
 			equalPressed(charPressed);
-		else if (e.which === 8)
+	});
+
+	// Use keydown for erase (non-printable)
+	$(window).keydown(function(e) {
+		if (e.which === 8) {
 			erasePressed();
+			e.preventDefault();
+		}
 	});
 
 }); // <<< ready
