@@ -28,49 +28,49 @@ $(document).ready(function() {
 	var process = [];
 	var isNumber = false;
 	var ans = "";
+
 	// printers
 	function printExp() {
 		var textarea = $("#expression textarea");
 		textarea.val(process.join(""));
 		textarea.scrollTop(textarea[0].scrollHeight);
 	}
+
 	function printAns(answer) {
 		$("#answer p").html(answer);
 	}
 
-	// When clicked
-	$(".number").click(function() {
-		process.push($(this).html());
+	// Validators
+	function validate(keyCode, type) {
+		var validators;
+		if (type === "number")
+			validators = "0123456789";
+		else if (type === "operator")
+			validators = "+-*/";
+		if (validators.indexOf(String.fromCharCode(keyCode)) != -1)
+			return true;
+	}
+
+	// Logic functions
+	function numberPressed(number) {
+		process.push(number);
 		printExp();
 		printAns("");
 		isNumber = true;
-	});
+	}
 
-	$(".operator").click(function() {
+	function operatorPressed(operator) {
 		if (!isNumber && process.length !== 0)
 			process.pop();
-		if (process.length !== 0 || $(this).html() == '-') {
-			process.push(" " + $(this).html() + " ");
+		if (process.length !== 0 || operator == '-') {
+			process.push(" " + operator + " ");
 			printExp();
 			$("#answer p").html("");
 			isNumber = false;
 		}
-	});
+	}
 
-	$("#erase").click(function() {
-		process.pop();
-		isNumber = (typeof parseInt(process[process.length - 1]) === "number");
-		printExp();
-		printAns("");
-	});
-
-	$("#clear").click(function() {
-		process = [];
-		printExp();
-		printAns("");
-	});
-
-	$("#equal").click(function() {
+	function equalPressed() {
 		ans = eval(process.join("").replace(/x/g, "*"));
 		var ansLength = ans.toString().length;
 		if (ansLength > 12)
@@ -78,6 +78,36 @@ $(document).ready(function() {
 		process = [];
 		printAns(ans);
 		printExp();
+	}
+
+	function erasePressed() {
+		process.pop();
+		isNumber = (typeof parseInt(process[process.length - 1]) === "number");
+		printExp();
+		printAns("");
+	}
+
+	// When clicked
+	$(".number").click(function() {
+		numberPressed($(this).html());
+	});
+
+	$(".operator").click(function() {
+		operatorPressed($(this).html());
+	});
+
+	$("#equal").click(function() {
+		equalPressed();
+	});
+
+	$("#erase").click(function() {
+		erasePressed();
+	});
+
+	$("#clear").click(function() {
+		process = [];
+		printExp();
+		printAns("");
 	});
 
 	$("#ansSaver").click(function() {
@@ -88,4 +118,18 @@ $(document).ready(function() {
 			isNumber = true;
 		}
 	});
-});
+
+	// When keyboard pressed
+	$(window).keypress(function(e) {
+		var charPressed = String.fromCharCode(e.which);
+		if (validate(e.which, "number"))
+			numberPressed(charPressed);
+		else if (validate(e.which, "operator"))
+			operatorPressed(charPressed);
+		else if (charPressed === "=")
+			equalPressed(charPressed);
+		else if (e.which === 8)
+			erasePressed();
+	});
+
+}); // <<< ready
