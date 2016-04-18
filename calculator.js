@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 	// Logic functions
 	function numberPressed(number) {
-		if (process[process.length - 1] !== ans) {
+		if (process.length === 0 || process[process.length - 1] !== "Ans") {
 			process.push(number);
 
 			// Pop preceding zero
@@ -70,7 +70,7 @@ $(document).ready(function() {
 	}
 
 	function dotPressed() {
-		if (process[process.length - 1] !== ans) {
+		if (process.length === 0 || process[process.length - 1] !== "Ans") {
 			var dotPressed = false;
 			for (var i = process.length - 1; (i >= 0 && process[i] !== " "); i--) {
 				if (process[i] === ".")
@@ -78,9 +78,14 @@ $(document).ready(function() {
 			}
 
 			if (!dotPressed) {
+				if (process.length === 0 || process[process.length - 1] === " ")
+					process.push("0");
+
 				process.push(".");
-				printExp();
 				headIsNumber = true;
+
+				printExp();
+				printAns("");
 			}
 		}
 	}
@@ -90,7 +95,7 @@ $(document).ready(function() {
 			ansPressed();
 		if (!headIsNumber && process.length !== 0)
 			erasePressed();
-		if (process.length !== 0 || operator == '-') {
+		if (process.length > 0 || operator == '-') {
 			process.push(" ");
 			process.push(operator);
 			process.push(" ");
@@ -101,8 +106,8 @@ $(document).ready(function() {
 	}
 
 	function equalPressed() {
-		if (process.length > 1) {
-			var ansNumber = eval(process.join("").replace(/x/g, "*"));
+		if (headIsNumber) {
+			var ansNumber = eval(process.join("").replace(/x/g, "*").replace(/Ans/g, ans));
 
 			// Output the number as a string
 			ans = ansNumber.toString();
@@ -114,31 +119,39 @@ $(document).ready(function() {
 			process = [];
 			headIsNumber = false;
 
-			printAns(ans);
 			printExp();
+			printAns(ans);
 		}
 	}
 
 	function erasePressed() {
-		// Pop the following soace
-		if (!headIsNumber)
+		if (process.length > 0) {
+			// Pop the following soace
+			if (!headIsNumber)
+				process.pop();
+
 			process.pop();
 
-		process.pop();
+			// Pop the preceding soace
+			if (!headIsNumber)
+				process.pop();
 
-		// Pop the preceding soace
-		if (!headIsNumber)
-			process.pop();
+			if (process.length > 0) {
+				var lastProcess = process[process.length - 1];
+				headIsNumber = /Ans|\d|\./.test(lastProcess);
+			} else
+				headIsNumber = false;
 
-		var lastProcess = process[process.length - 1];
-		headIsNumber = (lastProcess === ans || /\d|\./.test(lastProcess));
-		printExp();
+			printExp();
+		}
+
+		// Erase the answer if printed
 		printAns("");
 	}
 
 	function ansPressed() {
 		if (ans && !isNaN(ans) && !headIsNumber) {
-			process.push(ans);
+			process.push("Ans");
 			printExp();
 			printAns("");
 			headIsNumber = true;
