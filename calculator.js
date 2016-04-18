@@ -87,6 +87,15 @@ $(document).ready(function() {
 		printAns("");
 	}
 
+	function ansPressed() {
+		if (ans && !isNaN(ans)) {
+			process.push(" " + ans + " ");
+			printExp();
+			$("#answer p").html("");
+			isNumber = true;
+		}
+	}
+
 	// When clicked
 	$(".number").click(function() {
 		numberPressed($(this).html());
@@ -111,12 +120,7 @@ $(document).ready(function() {
 	});
 
 	$("#ansSaver").click(function() {
-		if (ans && !isNaN(ans)) {
-			process.push(" " + ans + " ");
-			printExp();
-			$("#answer p").html("");
-			isNumber = true;
-		}
+		ansPressed();
 	});
 
 	// When keyboard pressed
@@ -132,6 +136,8 @@ $(document).ready(function() {
 		}
 		else if (charPressed === "=" || e.which === 13)
 			equalPressed(charPressed);
+		else if (charPressed === "a" || charPressed === "A")
+			ansPressed();
 	});
 
 	// Use keydown for erase (non-printable)
