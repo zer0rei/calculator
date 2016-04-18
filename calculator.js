@@ -44,7 +44,7 @@ $(document).ready(function() {
 	function validate(keyCode, type) {
 		var validators;
 		if (type === "number")
-			validators = "0123456789";
+			validators = "0123456789.";
 		else if (type === "operator")
 			validators = "+-*/";
 		if (validators.indexOf(String.fromCharCode(keyCode)) != -1)
