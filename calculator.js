@@ -28,6 +28,7 @@ $(document).ready(function() {
 	var process = [];
 	var headIsNumber = false;
 	var ansPrinted = false;
+	var haltOperatorPressing = false;
 	var ans = "";
 
 	// printers
@@ -49,52 +50,66 @@ $(document).ready(function() {
 			validators = "0123456789";
 		else if (type === "operator")
 			validators = "+-*/";
-		if (validators.indexOf(String.fromCharCode(keyCode)) != -1)
+		if (validators.indexOf(String.fromCharCode(keyCode)) !== -1)
 			return true;
 	}
 
 	// Logic functions
 	function numberPressed(number) {
-		if (process.length === 0 || process[process.length - 1] !== "Ans") {
-			process.push(number);
+		if (process.length !== 0 && process[process.length - 1] === "Ans")
+			return;
 
-			// Pop preceding zero
-			if (!headIsNumber && number === "0")
-				process.pop();
-			else
-				headIsNumber = true;
+		process.push(number);
+
+		// Pop preceding zero
+		if (!headIsNumber && number === "0")
+			process.pop();
+		else {
+			headIsNumber = true;
+			haltOperatorPressing = false;
+		}
+
+		printExp();
+		printAns("");
+	}
+
+	function dotPressed() {
+		if (process.length !== 0 && process[process.length - 1] === "Ans")
+			return;
+
+		var dotPressed = false;
+		for (var i = process.length - 1; (i >= 0 && process[i] !== " "); i--) {
+			if (process[i] === ".")
+				dotPressed = true;
+		}
+
+		if (!dotPressed) {
+			if (process.length === 0 || process[process.length - 1] === " ")
+				process.push("0");
+
+			process.push(".");
+			headIsNumber = true;
+			haltOperatorPressing = false;
 
 			printExp();
 			printAns("");
 		}
 	}
 
-	function dotPressed() {
-		if (process.length === 0 || process[process.length - 1] !== "Ans") {
-			var dotPressed = false;
-			for (var i = process.length - 1; (i >= 0 && process[i] !== " "); i--) {
-				if (process[i] === ".")
-					dotPressed = true;
-			}
-
-			if (!dotPressed) {
-				if (process.length === 0 || process[process.length - 1] === " ")
-					process.push("0");
-
-				process.push(".");
-				headIsNumber = true;
-
-				printExp();
-				printAns("");
-			}
-		}
-	}
-
 	function operatorPressed(operator) {
+		if (haltOperatorPressing)
+			return;
+
 		if (ansPrinted)
 			ansPressed();
-		if (!headIsNumber && process.length !== 0)
-			erasePressed();
+		// Case operator in head
+		if (!headIsNumber && process.length !== 0) {
+			if (operator !== "-" || "+-".indexOf(process[process.length - 2]) !== -1)
+				erasePressed();
+			else
+				haltOperatorPressing = true;
+		}
+		// Add operator to process
 		if (process.length > 0 || operator == '-') {
 			process.push(" ");
 			process.push(operator);
@@ -106,22 +121,30 @@ $(document).ready(function() {
 	}
 
 	function equalPressed() {
-		if (headIsNumber) {
-			var ansNumber = eval(process.join("").replace(/x/g, "*").replace(/Ans/g, ans));
+		if (!headIsNumber)
+			return;
 
-			// Output the number as a string
-			ans = ansNumber.toString();
-			if (ans.length > 13)
+		var ansNumber = eval(process.join("").replace(/x/g, "*").replace(/Ans/g, ans));
+
+		// Output the number as a string
+		ans = ansNumber.toString();
+		if (ans.length > 13)
+			if (ans < 0)
+				ans = ansNumber.toPrecision(11);
+			else
 				ans = ansNumber.toPrecision(12);
-			if (ans.length > 13)
+		if (ans.length > 13)
+			if (ans < 0)
+				ans = ansNumber.toExponential(6);
+			else
 				ans = ansNumber.toExponential(7);
 
-			process = [];
-			headIsNumber = false;
+		process = [];
+		headIsNumber = false;
+		haltOperatorPressing = false;
 
-			printExp();
-			printAns(ans);
-		}
+		printExp();
+		printAns(ans);
 	}
 
 	function erasePressed() {
@@ -142,6 +165,7 @@ $(document).ready(function() {
 			} else
 				headIsNumber = false;
 
+			haltOperatorPressing = false;
 			printExp();
 		}
 
@@ -155,6 +179,7 @@ $(document).ready(function() {
 			printExp();
 			printAns("");
 			headIsNumber = true;
+			haltOperatorPressing = false;
 		}
 	}
 
@@ -184,6 +209,7 @@ $(document).ready(function() {
 		printExp();
 		printAns("");
 		headIsNumber = false;
+		haltOperatorPressing = false;
 	});
 
 	$("#ansSaver").click(function() {
