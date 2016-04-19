@@ -67,20 +67,24 @@ body {
 }
 
 .operator, .eraser, .number, #dot,  #ansSaver {
-	color: grey;
 	height: 3.6em;
-}
-
-.operator, .eraser {
-	background-color: #252525;
-}
-
-.number, #dot, #ansSaver{
-	background-color: #303030;
 }
 
 #equal {
 	height: 7.2em;
+}
+
+.color2 {
+	background-color: #252525;
+	color: grey;
+}
+
+.color1 {
+	background-color: #303030;
+	color: grey;
+}
+
+.color3 {
 	background-color: #AC92EC;
 	color: #121212;
 }

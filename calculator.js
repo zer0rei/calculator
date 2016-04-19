@@ -26,15 +26,28 @@ $(document).ready(function() {
 
 	// Logic
 	var process = [];
-	var headIsNumber = false;
 	var ansPrinted = false;
 	var haltOperatorPressing = false;
 	var ans = "";
 
-	// printers
+	// Process to string
+	function stringify(process) {
+		var string = "";
+		for (var i = 0; i < process.length; i++) {
+			if (process[i].type === "operator")
+				string += " " + process[i].val + " ";
+			else if (process[i].type === "unaryOperator")
+				string += " " + process[i].val;
+			else
+				string += process[i].val;
+		}
+		return string;
+	}
+
+	// Printers
 	function printExp() {
 		var textarea = $("#expression textarea");
-		textarea.val(process.join(""));
+		textarea.val(stringify(process));
 		textarea.scrollTop(textarea[0].scrollHeight);
 	}
 
@@ -55,165 +68,184 @@ $(document).ready(function() {
 	}
 
 	// Logic functions
-	function numberPressed(number) {
-		if (process.length !== 0 && process[process.length - 1] === "Ans")
+	function pressNumber(number) {
+		var lastProcess = null;
+		if (process.length !== 0) {
+			lastProcess = process[process.length - 1];
+			if (lastProcess.type === "answer")
+				return;
+		}
+
+		if (number !== "0" || (lastProcess && /^(number|dot)$/.test(lastProcess.type)))
+			process.push({
+				"val" : number,
+				"type" : "number"
+			});
+
+		printExp();
+		printAns("");
+	}
+
+	function pressDot() {
+		var lastProcess = null;
+		if (process.length !== 0) {
+			lastProcess = process[process.length - 1];
+			if (lastProcess.type === "answer")
+				return;
+		}
+
+		var dotPressed = false;
+		for (var i = process.length - 1; (i >= 0 && /^(number|dot)$/.test(process[i].type)); i--) {
+			if (process[i].type === "dot") {
+				dotPressed = true;
+				break;
+			}
+		}
+
+		if (dotPressed)
 			return;
 
-		process.push(number);
+		if (!lastProcess || lastProcess.type !== "number")
+			process.push({
+				"val" : "0",
+				"type" : "number"
+			});
 
-		// Pop preceding zero
-		if (!headIsNumber && number === "0")
-			process.pop();
-		else {
-			headIsNumber = true;
-			haltOperatorPressing = false;
+		process.push({
+			"val" : ".",
+			"type" : "dot"
+		});
+
+		printExp();
+		printAns("");
+	}
+
+	function pressOperator(operator) {
+		if (ansPrinted)
+			pressAns();
+
+		var lastProcess = (process.length > 0) ? process[process.length - 1] : null;
+
+		// Process empty (accept only unary minus)
+		if (!lastProcess && operator === "-")
+			process.push({
+				"val" : operator,
+				"type" : "unaryOperator"
+			});
+
+		// Process not empty
+		if (lastProcess) {
+			// After an operator
+			if (lastProcess.type === "operator") {
+				if (operator === "-" && "+-".indexOf(lastProcess.val) === -1)
+					process.push({
+						"val" : operator,
+						"type" : "unaryOperator"
+					});
+				else {
+					process.pop();
+					process.push({
+						"val" : operator,
+						"type" : "operator"
+					});
+				}
+			// After a number, dot, of the answer
+			} else if (/^(number|dot|answer)$/.test(lastProcess.type))
+				process.push({
+					"val" : operator,
+					"type" : "operator"
+				});
 		}
 
 		printExp();
 		printAns("");
 	}
 
-	function dotPressed() {
-		if (process.length !== 0 && process[process.length - 1] === "Ans")
+	function pressEqual() {
+		var lastProcess = (process.length > 0) ? process[process.length - 1] : null;
+		if (!lastProcess || /^(operator|unaryOperator)$/.test(lastProcess.type))
 			return;
 
-		var dotPressed = false;
-		for (var i = process.length - 1; (i >= 0 && process[i] !== " "); i--) {
-			if (process[i] === ".")
-				dotPressed = true;
-		}
-
-		if (!dotPressed) {
-			if (process.length === 0 || process[process.length - 1] === " ")
-				process.push("0");
-
-			process.push(".");
-			headIsNumber = true;
-			haltOperatorPressing = false;
-
-			printExp();
-			printAns("");
-		}
-	}
-
-	function operatorPressed(operator) {
-		if (haltOperatorPressing)
-			return;
-
-		if (ansPrinted)
-			ansPressed();
-		// Case operator in head
-		if (!headIsNumber && process.length !== 0) {
-			if (operator !== "-" || "+-".indexOf(process[process.length - 2]) !== -1)
-				erasePressed();
-			else
-				haltOperatorPressing = true;
-		}
-		// Add operator to process
-		if (process.length > 0 || operator == '-') {
-			process.push(" ");
-			process.push(operator);
-			process.push(" ");
-			printExp();
-			$("#answer p").html("");
-			headIsNumber = false;
-		}
-	}
-
-	function equalPressed() {
-		if (!headIsNumber)
-			return;
-
-		var ansNumber = eval(process.join("").replace(/x/g, "*").replace(/Ans/g, ans));
+		var ansNumber = eval(stringify(process).replace(/x/g, "*"));
 
 		// Output the number as a string
 		ans = ansNumber.toString();
+
+		// Larger than screen
 		if (ans.length > 13)
-			if (ans < 0)
-				ans = ansNumber.toPrecision(11);
-			else
-				ans = ansNumber.toPrecision(12);
+			ans = ansNumber.toPrecision(ans < 0 ? 11 : 12);
+		// Still larger than screen (Exponential notation)
 		if (ans.length > 13)
-			if (ans < 0)
-				ans = ansNumber.toExponential(6);
-			else
-				ans = ansNumber.toExponential(7);
+			ans = ansNumber.toExponential(ans < 0 ? 6 : 7);
 
 		process = [];
-		headIsNumber = false;
-		haltOperatorPressing = false;
-
 		printExp();
 		printAns(ans);
 	}
 
-	function erasePressed() {
-		if (process.length > 0) {
-			// Pop the following soace
-			if (!headIsNumber)
-				process.pop();
-
-			process.pop();
-
-			// Pop the preceding soace
-			if (!headIsNumber)
-				process.pop();
-
-			if (process.length > 0) {
-				var lastProcess = process[process.length - 1];
-				headIsNumber = /Ans|\d|\./.test(lastProcess);
-			} else
-				headIsNumber = false;
-
-			haltOperatorPressing = false;
-			printExp();
-		}
-
-		// Erase the answer if printed
+	function pressErase() {
+		process.pop();
+		printExp();
 		printAns("");
 	}
 
-	function ansPressed() {
-		if (ans && !isNaN(ans) && !headIsNumber) {
-			process.push("Ans");
-			printExp();
-			printAns("");
-			headIsNumber = true;
-			haltOperatorPressing = false;
-		}
+	function pressClear() {
+		process = [];
+		printExp();
+		printAns("");
+	}
+
+	function pressAns() {
+		var lastProcess = (process.length > 0) ? process[process.length - 1] : null;
+		// Case of NaN or answer after a non-operator
+		if (!ans || isNaN(ans) || (lastProcess && !(/^(operator|unaryOperator)$/.test(lastProcess.type))))
+			return;
+
+		var answer;
+
+		// Case of negative answer after a unary minus
+		if (lastProcess && Number(ans) < 0 && lastProcess.type === "unaryOperator" && lastProcess.val === "-") {
+			process.pop();
+			answer = (-Number(ans)).toString();
+		} else
+			answer = ans;
+
+		process.push({
+			"val" : answer,
+			"type" : "answer"
+		});
+
+		printExp();
+		printAns("");
 	}
 
 	// When clicked
 	$(".number").click(function() {
-		numberPressed($(this).html());
+		pressNumber($(this).html());
 	});
 
 	$("#dot").click(function() {
-		dotPressed();
+		pressDot();
 	});
 
 	$(".operator").click(function() {
-		operatorPressed($(this).html());
+		pressOperator($(this).html());
 	});
 
 	$("#equal").click(function() {
-		equalPressed();
+		pressEqual();
 	});
 
 	$("#erase").click(function() {
-		erasePressed();
+		pressErase();
 	});
 
 	$("#clear").click(function() {
-		process = [];
-		printExp();
-		printAns("");
-		headIsNumber = false;
-		haltOperatorPressing = false;
+		pressClear();
 	});
 
 	$("#ansSaver").click(function() {
-		ansPressed();
+		pressAns();
 	});
 
 	// When keyboard pressed
@@ -222,33 +254,33 @@ $(document).ready(function() {
 
 		// Case number
 		if (validate(e.which, "number"))
-			numberPressed(charPressed);
+			pressNumber(charPressed);
 
 		// Case dot
 		else if (charPressed === ".")
-			dotPressed();
+			pressDot();
 
 		// Case operator
 		else if (validate(e.which, "operator")) {
 			if (charPressed === "*")
 				charPressed = "x";
-			operatorPressed(charPressed);
+			pressOperator(charPressed);
 			e.preventDefault();
 		}
 
 		// Case equal
 		else if (charPressed === "=" || e.which === 13)
-			equalPressed(charPressed);
+			pressEqual(charPressed);
 
 		// Case ans
 		else if (charPressed === "a" || charPressed === "A")
-			ansPressed();
+			pressAns();
 	});
 
 	// Use keydown for erase (non-printable)
 	$(window).keydown(function(e) {
 		if (e.which === 8) {
-			erasePressed();
+			pressErase();
 			e.preventDefault();
 		}
 	});
