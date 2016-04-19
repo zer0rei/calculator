@@ -96,3 +96,28 @@ body {
 #credit a {
 	color: #60449D;
 }
+
+@media screen and (max-height: 480px) {
+
+	#calculator {
+		width: 18em;
+		height: 24em;
+	}
+
+	#screen {
+		height: 8em;
+	}
+
+	.operator, .eraser, .number, #dot,  #ansSaver {
+		height: 3.22em;
+	}
+
+	#equal {
+		height: 6.44em;
+	}
+
+	#answer {
+		font-size: 2.2em;
+	}
+
+}
