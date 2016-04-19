@@ -70,17 +70,27 @@ $(document).ready(function() {
 	// Logic functions
 	function pressNumber(number) {
 		var lastProcess = null;
-		if (process.length !== 0) {
+		if (process.length > 0) {
 			lastProcess = process[process.length - 1];
 			if (lastProcess.type === "answer")
 				return;
 		}
 
-		if (number !== "0" || (lastProcess && /^(number|dot)$/.test(lastProcess.type)))
-			process.push({
-				"val" : number,
-				"type" : "number"
-			});
+		var secondLastProcess = (process.length > 1) ? process[process.length - 2] : null;
+
+		// Return if more than one preceding zero
+		// Or pop the preceding zero if next press is another number
+		if (lastProcess && lastProcess.val === "0" &&
+				(!secondLastProcess || (secondLastProcess && !(/^(number|dot)$/.test(secondLastProcess.type)))))
+			if (number === "0")
+				return;
+			else
+				process.pop();
+
+		process.push({
+			"val" : number,
+			"type" : "number"
+		});
 
 		printExp();
 		printAns("");
@@ -88,7 +98,7 @@ $(document).ready(function() {
 
 	function pressDot() {
 		var lastProcess = null;
-		if (process.length !== 0) {
+		if (process.length > 0) {
 			lastProcess = process[process.length - 1];
 			if (lastProcess.type === "answer")
 				return;
