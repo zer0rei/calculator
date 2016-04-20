@@ -211,14 +211,13 @@ $(document).ready(function() {
 		if (!ans || isNaN(ans) || (lastProcess && !(/^(operator|unaryOperator)$/.test(lastProcess.type))))
 			return;
 
-		var answer;
+		var answer = ans;
 
 		// Case of negative answer after a unary minus
 		if (lastProcess && Number(ans) < 0 && lastProcess.type === "unaryOperator" && lastProcess.val === "-") {
 			process.pop();
-			answer = (-Number(ans)).toString();
-		} else
-			answer = ans;
+			answer = ans.substr(1);
+		}
 
 		process.push({
 			"val" : answer,
