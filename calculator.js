@@ -186,7 +186,7 @@ $(document).ready(function() {
 			ans = ansNumber.toPrecision(ans < 0 ? 11 : 12).replace(/\.?0+$/, "");
 		// Still larger than screen (Exponential notation)
 		if (ans.length > 13)
-			ans = ansNumber.toExponential(ans < 0 ? 6 : 7);
+			ans = ansNumber.toExponential(ans < 0 ? 6 : 7).replace(/\.?0+(e|E)/, "$1");
 
 		process = [];
 		printExp();
