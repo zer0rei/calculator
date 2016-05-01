@@ -3,11 +3,6 @@
 // // // // // // // // //
 
 $(document).ready(function() {
-	// Remove the 300ms delay in mobile
-	$(function() {
-		FastClick.attach(document.body);
-	});
-
 	// Layout
 	$(window).resize(function() {
 		var calcTop = ($(window).height() - $("#calculator").height()) / 2;
@@ -229,35 +224,58 @@ $(document).ready(function() {
 	}
 
 	// When clicked
-	$(".number").click(function() {
-		pressNumber($(this).html());
+	$(".number, #erase").on("mousedown touchstart", function(e) {
+		if ((e.type === "mousedown" && e.which === 1) ||
+			(e.type === "touchstart" && e.originalEvent.touches.length === 1)) {
+
+			var that = this;
+			var timeout, interval;
+
+			if (this.id === "erase")
+				pressErase();
+			else if ($(that).hasClass("number"))
+				pressNumber($(this).html());
+
+			timeout = setTimeout(function() {
+				interval = setInterval(function() {
+					if (that.id === "erase")
+						pressErase();
+					else if ($(that).hasClass("number"))
+						pressNumber($(that).html());
+				}, 100);
+			}, 300);
+
+			e.preventDefault();
+
+			$(window).on("mouseup touchend", function() {
+				clearTimeout(timeout);
+				clearInterval(interval);
+			});
+		}
 	});
 
-	$("#dot").click(function() {
-		pressDot();
-	});
+	$(".operator, #dot, #equal, #clear, #ansSaver").on("mousedown touchstart", function(e) {
+		if ((e.type === "mousedown" && e.which === 1) ||
+			(e.type === "touchstart" && e.originalEvent.touches.length === 1)) {
 
-	$(".operator").click(function() {
-		pressOperator($(this).html());
-	});
+			if (this.id === "dot")
+				pressDot();
+			else if (this.id === "equal")
+				pressEqual();
+			else if (this.id === "clear")
+				pressClear();
+			else if (this.id === "ansSaver")
+				pressAns();
+			else if ($(this).hasClass("operator"))
+				pressOperator($(this).html());
 
-	$("#equal").click(function() {
-		pressEqual();
-	});
-
-	$("#erase").click(function() {
-		pressErase();
-	});
-
-	$("#clear").click(function() {
-		pressClear();
-	});
-
-	$("#ansSaver").click(function() {
-		pressAns();
+			e.preventDefault();
+		}
 	});
 
 	// When keyboard pressed
+
+	// Use keypress for printables
 	$(window).keypress(function(e) {
 		var charPressed = String.fromCharCode(e.which);
 
